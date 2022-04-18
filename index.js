@@ -1,7 +1,10 @@
 const inquirer = require('inquirer');
-const jest = require('jest');
 
-const fs = require('fs');
+// requiring the page-template.js module (from local files) which creates the HTML page
+const generatePage = require('./src/page-template');
+
+// requiring the generate-site.js module (from local files) which creates the files for the site and copies the style sheet
+const { writeFile, copyFile } = require('./utils/generate-site');
 
 const promptTeam = () => {
     console.log(`
@@ -256,19 +259,19 @@ const promptIntern = portfolioData => {
 promptTeam()
     .then(promptTeamLead)
     .then(promptEmployee)
-    // .then(portfolioData => {
-    //     return generatePage(portfolioData);
-    // })
-    // .then(pageHTML => {
-    //     return fs.writeFile(pageHTML);
-    // })
-    // .then(writeFileResponse => {
-    //     console.log(writeFileResponse);
-    //     return copyFile();
-    // })
-    // .then(copyFileResponse => {
-    //     console.log(copyFileResponse);
-    // })
-    // .catch(err => {
-    //     console.log(err);
-    // });
+    .then(portfolioData => {
+        return generatePage(portfolioData);
+    })
+    .then(pageHTML => {
+        return fs.writeFile(pageHTML);
+    })
+    .then(writeFileResponse => {
+        console.log(writeFileResponse);
+        return copyFile();
+    })
+    .then(copyFileResponse => {
+        console.log(copyFileResponse);
+    })
+    .catch(err => {
+        console.log(err);
+    });
